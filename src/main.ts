@@ -1,9 +1,12 @@
-  import { whenOnce } from "@arcgis/core/core/reactiveUtils";
+import { whenOnce } from "@arcgis/core/core/reactiveUtils";
 import SceneView from "@arcgis/core/views/SceneView";
 import WebScene from "@arcgis/core/WebScene";
 import Daylight from "@arcgis/core/widgets/Daylight";
 import Expand from "@arcgis/core/widgets/Expand";
 import Weather from "@arcgis/core/widgets/Weather";
+import CloudyWeather from "@arcgis/core/views/3d/environment/CloudyWeather";
+import RainyWeather from "@arcgis/core/views/3d/environment/RainyWeather";
+
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import "@esri/calcite-components/dist/components/calcite-loader";
 
@@ -85,16 +88,15 @@ view.when(() => {
     return layer.title === "Flood Level";
   });
 
-  const buttonFlooding = document.getElementById("flooding");
-  const buttonNoFlooding = document.getElementById("noFlooding");
+  const buttonFlooding = document.getElementById("flooding") as HTMLCalciteButtonElement;
+  const buttonNoFlooding = document.getElementById("noFlooding") as HTMLCalciteButtonElement;
 
   buttonFlooding?.addEventListener("click", (event) => {
     // Change the weather to rainy to match the flooding scenario
-    view.environment.weather = {
-      type: "rainy", // autocasts as new RainyWeather({ cloudCover: 0.7, precipitation: 0.3 })
+    view.environment.weather = new RainyWeather({
       cloudCover: 0.7,
       precipitation: 0.3,
-    };
+    });
 
     // Turn on the water layer showing the flooding
     floodLevel.visible = true;
@@ -106,10 +108,9 @@ view.when(() => {
 
   buttonNoFlooding?.addEventListener("click", (event) => {
     // Change the weather back to cloudy
-    view.environment.weather = {
-      type: "cloudy", // autocasts as new CloudyWeather({ cloudCover: 0.3 })
+    view.environment.weather = new CloudyWeather({
       cloudCover: 0.3,
-    };
+    });
 
     // Turn off the water layer showing the flooding
     floodLevel.visible = false;
