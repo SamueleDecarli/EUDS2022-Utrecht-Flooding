@@ -11,7 +11,14 @@
     <link rel="stylesheet" href="/src/general.scss" />
   </head>
   <body>
-    <div id="viewDiv">
+    <div id="viewDiv"></div>
+    <div id="selection">
+      <calcite-button id="noFlooding" appearance="solid"
+        >No flooding</calcite-button
+      >
+      <calcite-button id="flooding" appearance="outline"
+        >Flooding</calcite-button
+      >
     </div>
     <calcite-loader scale="l" id="loader" active></calcite-loader>
     <script type="module" src="/src/main.ts"></script>

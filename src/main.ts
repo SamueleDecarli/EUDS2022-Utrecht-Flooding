@@ -1,7 +1,9 @@
-import Color from "@arcgis/core/Color";
-import { whenOnce } from "@arcgis/core/core/reactiveUtils";
+  import { whenOnce } from "@arcgis/core/core/reactiveUtils";
 import SceneView from "@arcgis/core/views/SceneView";
 import WebScene from "@arcgis/core/WebScene";
+import Daylight from "@arcgis/core/widgets/Daylight";
+import Expand from "@arcgis/core/widgets/Expand";
+import Weather from "@arcgis/core/widgets/Weather";
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import "@esri/calcite-components/dist/components/calcite-loader";
 
@@ -21,27 +23,101 @@ import "@esri/calcite-components/dist/components/calcite-loader";
 // (window as any).setOAuthResponseHash = (responseHash: string) => {
 //   IdentityManager.setOAuthResponseHash(responseHash);
 // };
-
-const map = new WebScene({
+/***********************************
+ * Create the SceneView
+ ***********************************/
+// Load a webscene
+const scene = new WebScene({
   portalItem: {
-    id: "91b46c2b162c48dba264b2190e1dbcff",
+    id: "c56dab9e4d1a4b0c9d1ee7f589343516",
   },
 });
 
+// Create a new SceneView and set the weather to cloudy
 const view = new SceneView({
+  map: scene,
   container: "viewDiv",
-  map,
   qualityProfile: "high",
+
+  environment: {
+    weather: {
+      type: "cloudy", // autocasts as new CloudyWeather({ cloudCover: 0.3 })
+      cloudCover: 0.3,
+    },
+    atmosphere: {
+      quality: "high",
+    },
+    lighting: {
+      waterReflectionEnabled: true,
+      ambientOcclusionEnabled: true,
+    },
+  },
 });
 
-map.when().then(() => {
-  map.ground.surfaceColor = new Color([220, 220, 220]);
+/***********************************
+ * Add the widgets' UI elements to the view
+ ***********************************/
+const weatherExpand = new Expand({
+  view: view,
+  content: new Weather({
+    view: view,
+  }),
+  group: "top-right",
+  expanded: true,
 });
 
-map.loadAll().then(() => {
-  const slides = map.presentation.slides;
-  const slide = slides.getItemAt(Math.floor(Math.random() * slides.length));
-  slide.applyTo(view, { animate: false });
+const daylightExpand = new Expand({
+  view: view,
+  content: new Daylight({
+    view: view,
+  }),
+  group: "top-right",
+});
+view.ui.add([weatherExpand, daylightExpand], "top-right");
+
+/***********************************
+ * Add functionality to change between flooding and no flooding
+ ***********************************/
+// Wait for the view to be loaded, in order to being able to retrieve the layer
+view.when(() => {
+  // Find the layer for the
+  let floodLevel = scene.allLayers.find(function (layer) {
+    return layer.title === "Flood Level";
+  });
+
+  const buttonFlooding = document.getElementById("flooding");
+  const buttonNoFlooding = document.getElementById("noFlooding");
+
+  buttonFlooding?.addEventListener("click", (event) => {
+    // Change the weather to rainy to match the flooding scenario
+    view.environment.weather = {
+      type: "rainy", // autocasts as new RainyWeather({ cloudCover: 0.7, precipitation: 0.3 })
+      cloudCover: 0.7,
+      precipitation: 0.3,
+    };
+
+    // Turn on the water layer showing the flooding
+    floodLevel.visible = true;
+
+    // Styling of the buttons
+    buttonNoFlooding.appearance = "outline";
+    buttonFlooding.appearance = "solid";
+  });
+
+  buttonNoFlooding?.addEventListener("click", (event) => {
+    // Change the weather back to cloudy
+    view.environment.weather = {
+      type: "cloudy", // autocasts as new CloudyWeather({ cloudCover: 0.3 })
+      cloudCover: 0.3,
+    };
+
+    // Turn off the water layer showing the flooding
+    floodLevel.visible = false;
+
+    // Styling of the buttons
+    buttonNoFlooding.appearance = "solid";
+    buttonFlooding.appearance = "outline";
+  });
 });
 
 whenOnce(() => !view.updating).then(() => {
