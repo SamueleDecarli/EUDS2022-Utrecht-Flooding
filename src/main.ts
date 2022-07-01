@@ -1,4 +1,3 @@
-import { whenOnce } from "@arcgis/core/core/reactiveUtils";
 import SceneView from "@arcgis/core/views/SceneView";
 import WebScene from "@arcgis/core/WebScene";
 import Daylight from "@arcgis/core/widgets/Daylight";
@@ -121,9 +120,6 @@ view.when(() => {
   });
 });
 
-whenOnce(() => !view.updating).then(() => {
-  const loader = document.getElementById("loader");
-  loader?.parentElement?.removeChild(loader);
-});
+
 
 window["view"] = view;
