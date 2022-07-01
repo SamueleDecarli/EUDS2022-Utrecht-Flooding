@@ -87,8 +87,12 @@ view.when(() => {
     return layer.title === "Flood Level";
   });
 
-  const buttonFlooding = document.getElementById("flooding") as HTMLCalciteButtonElement;
-  const buttonNoFlooding = document.getElementById("noFlooding") as HTMLCalciteButtonElement;
+  const buttonFlooding = document.getElementById(
+    "flooding"
+  ) as HTMLCalciteButtonElement;
+  const buttonNoFlooding = document.getElementById(
+    "noFlooding"
+  ) as HTMLCalciteButtonElement;
 
   buttonFlooding?.addEventListener("click", (event) => {
     // Change the weather to rainy to match the flooding scenario
@@ -118,8 +122,27 @@ view.when(() => {
     buttonNoFlooding.appearance = "solid";
     buttonFlooding.appearance = "outline";
   });
+
+  const sliderFlooding = document.getElementById("slider");
+
+  sliderFlooding?.addEventListener("input", (event) => {
+    let weather = view.environment.weather;
+
+    if (sliderFlooding.value == 0) {
+      view.environment.weather = new CloudyWeather({
+        cloudCover: weather.cloudCover,
+      });
+      floodLevel.visible = false;
+    } else {
+      view.environment.weather = new RainyWeather({
+        cloudCover: weather.cloudCover,
+        precipitation: sliderFlooding.value,
+      });
+      floodLevel.visible = true;
+      floodLevel.layers.getItemAt(0).elevationInfo = {mode: 'absolute-height', offset: sliderFlooding.value * 3};
+      floodLevel.layers.getItemAt(1).elevationInfo = {mode: 'absolute-height', offset: sliderFlooding.value * 3-2};
+    }
+  });
 });
-
-
 
 window["view"] = view;
