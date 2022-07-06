@@ -1,4 +1,5 @@
 @import '@arcgis/core/assets/esri/themes/light/main.css';
+
 html,
 body,
 #viewDiv {
@@ -8,44 +9,87 @@ body,
   padding: 0;
 }
 
-#selection {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
+
+.container {
   display: flex;
+  flex-direction: column;
+  background-color: white;
   justify-content: center;
+  padding: 10px;
 }
 
-calcite-button {
-  width: 40%;
-  max-width: 300px;
-  margin-left: 5px;
+.container calcite-button {
+  width: 200px;
+  margin: 5px;
 }
-
 
 #sliderContainer {
-  background-color: white;
   padding: 15px;
   -webkit-transform: rotate(270deg);
   position: absolute;
-  bottom: 300px;
-  right: -100px;
-} 
-input[type=range] {
-  width: 300px; 
-  height: 3px;
+  bottom: 150px;
+  right: -50px;
+  z-index: 99;
+}
+
+#labelContainer {
+  background-color: white;
+  padding: 25px;
+  width: 180px;
+  height: 280px;
+  position: absolute;
+  bottom: 40px;
+  right: 30px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.labels {
+  width: 80%;
+  text-align: right;
+  cursor: pointer;  
+}
+
+input[type="range"] {
+  display: block;
+  -webkit-appearance: none;
+  background-color: var(--calcite-ui-brand);
+  margin: 0 auto;
+  outline: 0;
+  width: 200px;
+  height: 6px;
   border-radius: 3px;
 }
 
-// Does not work yet
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  border: none;
-  height: 14px;
-  width: 14px;
+  background-color: white;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: white;
-  border-width: 2px;
-  border-color: black;
+  border: 2px solid grey;
+  cursor: pointer;  
+}
+
+​ input[type="range"]::-webkit-slider-thumb:hover {
+  background-color: var(--calcite-ui-brand);
+  border: 2px solid var(--calcite-ui-brand);
+  width: 30px;
+  height: 30px;
+  outline: 3px solid white;
+        outline-offset: -6px;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  background-color: var(--calcite-ui-brand);
+  border: 2px solid var(--calcite-ui-brand);
+  width: 30px;
+  height: 30px;
+  outline: 3px solid white;
+        outline-offset: -6px;
+}
+
+h3 {
+  margin: 5px;
 }

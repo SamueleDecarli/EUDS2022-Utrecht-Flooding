@@ -8,6 +8,12 @@ import RainyWeather from "@arcgis/core/views/3d/environment/RainyWeather";
 
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import "@esri/calcite-components/dist/components/calcite-loader";
+import { FalseLiteral } from "typescript";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import Layer from "@arcgis/core/layers/Layer";
+import Home from "@arcgis/core/widgets/Home";
+import Camera from "@arcgis/core/Camera";
+import GroupLayer from "@arcgis/core/layers/GroupLayer";
 
 // setAssetPath("https://js.arcgis.com/calcite-components/1.0.0-beta.77/assets");
 
@@ -39,6 +45,15 @@ const scene = new WebScene({
 const view = new SceneView({
   map: scene,
   container: "viewDiv",
+  camera: new Camera({
+    position: {
+      longitude: 5.11844661,
+      latitude: 52.09356785,
+      z: 11.40484
+    },
+    heading: 86.89,
+    tilt: 88.50
+  }),
   qualityProfile: "high",
 
   environment: {
@@ -65,7 +80,6 @@ const weatherExpand = new Expand({
     view: view,
   }),
   group: "top-right",
-  expanded: true,
 });
 
 const daylightExpand = new Expand({
@@ -76,73 +90,108 @@ const daylightExpand = new Expand({
   group: "top-right",
 });
 view.ui.add([weatherExpand, daylightExpand], "top-right");
+view.ui.add(new Home({ view: view }), "top-left")
+
 
 /***********************************
  * Add functionality to change between flooding and no flooding
  ***********************************/
 // Wait for the view to be loaded, in order to being able to retrieve the layer
+let floodLevel: Layer;
+
+
+const flooding1 = document.getElementById(
+  "flooding1"
+) as HTMLCalciteButtonElement;
+const flooding2 = document.getElementById(
+  "flooding2"
+) as HTMLCalciteButtonElement;
+const flooding3 = document.getElementById(
+  "flooding3"
+) as HTMLCalciteButtonElement;
+const flooding4 = document.getElementById(
+  "flooding4"
+) as HTMLCalciteButtonElement;
+
+const sliderFlooding = document.getElementById("slider") as HTMLInputElement;
+
 view.when(() => {
   // Find the layer for the
-  let floodLevel = scene.allLayers.find(function (layer) {
+  floodLevel = scene.allLayers.find(function (layer) {
     return layer.title === "Flood Level";
   });
 
-  const buttonFlooding = document.getElementById(
-    "flooding"
-  ) as HTMLCalciteButtonElement;
-  const buttonNoFlooding = document.getElementById(
-    "noFlooding"
-  ) as HTMLCalciteButtonElement;
 
-  buttonFlooding?.addEventListener("click", (event) => {
+
+  flooding1?.addEventListener("click", (event) => {
     // Change the weather to rainy to match the flooding scenario
-    view.environment.weather = new RainyWeather({
-      cloudCover: 0.7,
-      precipitation: 0.3,
-    });
-
-    // Turn on the water layer showing the flooding
-    floodLevel.visible = true;
-
-    // Styling of the buttons
-    buttonNoFlooding.appearance = "outline";
-    buttonFlooding.appearance = "solid";
+    changeFlooding(1);
+    sliderFlooding!.value = "1";
   });
 
-  buttonNoFlooding?.addEventListener("click", (event) => {
-    // Change the weather back to cloudy
-    view.environment.weather = new CloudyWeather({
-      cloudCover: 0.3,
-    });
-
-    // Turn off the water layer showing the flooding
-    floodLevel.visible = false;
-
-    // Styling of the buttons
-    buttonNoFlooding.appearance = "solid";
-    buttonFlooding.appearance = "outline";
+  flooding2?.addEventListener("click", (event) => {
+    // Change the weather to rainy to match the flooding scenario
+    changeFlooding(2);
+    sliderFlooding!.value = "2";
   });
 
-  const sliderFlooding = document.getElementById("slider");
+  flooding3?.addEventListener("click", (event) => {
+    // Change the weather to rainy to match the flooding scenario
+    changeFlooding(3);
+    sliderFlooding!.value = "3";
+  });
+
+  flooding4?.addEventListener("click", (event) => {
+    // Change the weather to rainy to match the flooding scenario
+    changeFlooding(4);
+    sliderFlooding!.value = "4";
+  });
+
 
   sliderFlooding?.addEventListener("input", (event) => {
-    let weather = view.environment.weather;
-
-    if (sliderFlooding.value == 0) {
-      view.environment.weather = new CloudyWeather({
-        cloudCover: weather.cloudCover,
-      });
-      floodLevel.visible = false;
-    } else {
-      view.environment.weather = new RainyWeather({
-        cloudCover: weather.cloudCover,
-        precipitation: sliderFlooding.value,
-      });
-      floodLevel.visible = true;
-      floodLevel.layers.getItemAt(0).elevationInfo = {mode: 'absolute-height', offset: sliderFlooding.value * 3};
-      floodLevel.layers.getItemAt(1).elevationInfo = {mode: 'absolute-height', offset: sliderFlooding.value * 3-2};
-    }
+    changeFlooding(parseInt(sliderFlooding.value));
   });
 });
+
+function changeFlooding(value: number) {
+  let weather = view.environment.weather;
+
+  switch (value) {
+    case 1:
+      view.environment.weather = new CloudyWeather({
+        cloudCover: 0.5,
+      });
+      floodLevel.visible = false;
+      break;
+    case 2:
+      view.environment.weather = new RainyWeather({
+        cloudCover: 0.4,
+        precipitation: 0.2,
+      });
+      floodLevel.visible = false;
+
+
+      break;
+    case 3:
+      view.environment.weather = new RainyWeather({
+        cloudCover: 0.4,
+        precipitation: 0.5,
+      });
+      floodLevel.visible = true;
+      ((floodLevel as GroupLayer).layers.getItemAt(0) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 1.1 };
+      ((floodLevel as GroupLayer).layers.getItemAt(1) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 3 };
+      break;
+    case 4:
+      view.environment.weather = new RainyWeather({
+        cloudCover: 0.4,
+        precipitation: 1,
+      });
+      floodLevel.visible = true;
+      ((floodLevel as GroupLayer).layers.getItemAt(0) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 2 };
+      ((floodLevel as GroupLayer).layers.getItemAt(1) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 4};
+      break;
+
+  }
+}
 
 window["view"] = view;
