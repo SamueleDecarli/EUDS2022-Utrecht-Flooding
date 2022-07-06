@@ -6,24 +6,29 @@
       name="viewport"
       content="initial-scale=1,maximum-scale=1,user-scalable=no"
     />
-    <title>ArcGIS API for JavaScript Template</title>
+    <title>UC2022 Utrecht Flooding</title>
 
     
-    <script type="module" crossorigin src="./assets/index.d8b191d5.js"></script>
-    <link rel="modulepreload" href="./assets/vendor.e1f4f720.js">
-    <link rel="stylesheet" href="./assets/index.dd1834a2.css">
+    <script type="module" crossorigin src="./assets/index.f3a273c2.js"></script>
+    <link rel="modulepreload" href="./assets/vendor.e52053a0.js">
+    <link rel="stylesheet" href="./assets/index.22f0aabe.css">
   </head>
   <body>
     <div id="viewDiv"></div>
-    <div id="selection">
-      <calcite-button id="noFlooding" appearance="solid"
-        >No flooding</calcite-button
-      >
-      <calcite-button id="flooding" appearance="outline"
-        >Flooding</calcite-button
-      >
+
+    <div id="sliderContainer">
+      <input type="range" min="1" max="4" value="1" step="1" class="slider" id="slider">
     </div>
-    <calcite-loader scale="l" id="loader" active></calcite-loader>
+
+    <div id="labelContainer">
+      <h3>Flooding scenarios</h3>
+      <div id="flooding4" class="labels" appearance="outline">1000 year rain</div>
+      <div id="flooding3" class="labels" appearance="outline">Strong rain</div>
+      <div id="flooding2" class="labels" appearance="outline">Light rain</div>
+      <div id="flooding1" class="labels" appearance="solid">No rain</div>
+    </div>
+
+    
     
   </body>
 </html>
