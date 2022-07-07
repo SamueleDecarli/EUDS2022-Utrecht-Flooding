@@ -16,22 +16,7 @@ import Camera from "@arcgis/core/Camera";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import Legend from "@arcgis/core/widgets/Legend";
 
-// setAssetPath("https://js.arcgis.com/calcite-components/1.0.0-beta.77/assets");
 
-// const params = new URLSearchParams(document.location.search.slice(1));
-// const someParam = params.has("someParam");
-
-// IdentityManager.registerOAuthInfos([
-//   new OAuthInfo({
-//     appId: "",
-//     popup: true,
-//     popupCallbackUrl: `${document.location.origin}${document.location.pathname}oauth-callback-api.html`,
-//   }),
-// ]);
-
-// (window as any).setOAuthResponseHash = (responseHash: string) => {
-//   IdentityManager.setOAuthResponseHash(responseHash);
-// };
 /***********************************
  * Create the SceneView
  ***********************************/
@@ -173,8 +158,6 @@ function changeFlooding(value: number) {
         precipitation: 0.2,
       });
       floodLevel.visible = false;
-
-
       break;
     case 3:
       view.environment.weather = new RainyWeather({
@@ -182,8 +165,8 @@ function changeFlooding(value: number) {
         precipitation: 0.5,
       });
       floodLevel.visible = true;
-      ((floodLevel as GroupLayer).layers.getItemAt(0) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 1.1 };
-      ((floodLevel as GroupLayer).layers.getItemAt(1) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 3 };
+      ((floodLevel as GroupLayer).layers.getItemAt(0) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 2 };
+      ((floodLevel as GroupLayer).layers.getItemAt(1) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: -0.5 };
       break;
     case 4:
       view.environment.weather = new RainyWeather({
@@ -191,8 +174,8 @@ function changeFlooding(value: number) {
         precipitation: 1,
       });
       floodLevel.visible = true;
-      ((floodLevel as GroupLayer).layers.getItemAt(0) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 2 };
-      ((floodLevel as GroupLayer).layers.getItemAt(1) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 4};
+      ((floodLevel as GroupLayer).layers.getItemAt(0) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 3 };
+      ((floodLevel as GroupLayer).layers.getItemAt(1) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 0 };
       break;
   }
 }
