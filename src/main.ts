@@ -14,6 +14,7 @@ import Layer from "@arcgis/core/layers/Layer";
 import Home from "@arcgis/core/widgets/Home";
 import Camera from "@arcgis/core/Camera";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
+import Legend from "@arcgis/core/widgets/Legend";
 
 // setAssetPath("https://js.arcgis.com/calcite-components/1.0.0-beta.77/assets");
 
@@ -37,7 +38,7 @@ import GroupLayer from "@arcgis/core/layers/GroupLayer";
 // Load a webscene
 const scene = new WebScene({
   portalItem: {
-    id: "c56dab9e4d1a4b0c9d1ee7f589343516",
+    id: "4211bb14e7374366be9d964918ee2e5d",
   },
 });
 
@@ -91,14 +92,15 @@ const daylightExpand = new Expand({
 });
 view.ui.add([weatherExpand, daylightExpand], "top-right");
 view.ui.add(new Home({ view: view }), "top-left")
-
+const legend = new Expand({ view: view, expanded: false, content: new Legend({view:view})})
+view.ui.add(legend, "bottom-left")
 
 /***********************************
  * Add functionality to change between flooding and no flooding
  ***********************************/
 // Wait for the view to be loaded, in order to being able to retrieve the layer
 let floodLevel: Layer;
-
+let floodImpact: Layer;
 
 const flooding1 = document.getElementById(
   "flooding1"
@@ -121,6 +123,10 @@ view.when(() => {
     return layer.title === "Flood Level";
   });
 
+  floodImpact = scene.allLayers.find(function (layer) {
+    return layer.title === "Building Flood Impact";
+  });
+  floodImpact.title = "Flood Impact (1000 year rain)";
 
 
   flooding1?.addEventListener("click", (event) => {
@@ -154,8 +160,6 @@ view.when(() => {
 });
 
 function changeFlooding(value: number) {
-  let weather = view.environment.weather;
-
   switch (value) {
     case 1:
       view.environment.weather = new CloudyWeather({
@@ -190,8 +194,22 @@ function changeFlooding(value: number) {
       ((floodLevel as GroupLayer).layers.getItemAt(0) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 2 };
       ((floodLevel as GroupLayer).layers.getItemAt(1) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 4};
       break;
-
   }
 }
+
+let impact = document.getElementById("impact") as HTMLCalciteButtonElement;
+
+impact.addEventListener("click", () => {
+  if (impact.appearance == "outline") {
+    impact.appearance = "solid";
+    floodImpact.visible = true;
+    legend.expanded = true;
+  }
+  else {
+    impact.appearance = "outline";
+    floodImpact.visible = false;
+    legend.expanded = false;
+  }
+});
 
 window["view"] = view;

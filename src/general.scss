@@ -27,7 +27,7 @@ body,
   padding: 15px;
   -webkit-transform: rotate(270deg);
   position: absolute;
-  bottom: 150px;
+  bottom: 210px;
   right: -50px;
   z-index: 99;
 }
@@ -38,7 +38,7 @@ body,
   width: 180px;
   height: 280px;
   position: absolute;
-  bottom: 40px;
+  bottom: 100px;
   right: 30px;
   display: flex;
   justify-content: space-between;
@@ -50,6 +50,19 @@ body,
   text-align: right;
   cursor: pointer;  
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  justify-content: center;
+  padding: 10px;
+
+  position: absolute;
+  bottom: 40px;
+  right: 30px;
+}
+
 
 input[type="range"] {
   display: block;
