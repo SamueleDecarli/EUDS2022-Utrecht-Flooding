@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="initial-scale=1,maximum-scale=1,user-scalable=no"
-    />
-    <title>UC2022 Utrecht Flooding</title>
 
-    <link rel="stylesheet" href="/src/general.scss" />
-  </head>
-  <body>
-    <div id="viewDiv"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>UC2022 Utrecht Flooding</title>
 
-    <div id="sliderContainer">
-      <input type="range" min="1" max="4" value="1" step="1" class="slider" id="slider">
-    </div>
+  <link rel="stylesheet" href="/src/general.scss" />
+</head>
 
-    <div id="labelContainer">
-      <h3>Flooding scenarios</h3>
-      <div id="flooding4" class="labels" appearance="outline">1000 year rain</div>
-      <div id="flooding3" class="labels" appearance="outline">Strong rain</div>
-      <div id="flooding2" class="labels" appearance="outline">Light rain</div>
-      <div id="flooding1" class="labels" appearance="solid">No rain</div>
-    </div>
+<body>
+  <div id="viewDiv"></div>
 
-    <div id="buttonContainer" class="container">
-      <calcite-button id="impact" appearance="outline">Flood Impact</calcite-button>
-  
-    </div>
+  <calcite-button id="addFlood">Add Flood</calcite-button>
 
-    
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  <calcite-button id="addWater">Water Symbology</calcite-button>
+
+  <calcite-button id="showOverview">Overview</calcite-button>
+
+
+  <div id="sliderContainer">
+    <input type="range" min="1" max="4" value="1" step="1" class="slider" id="slider">
+  </div>
+
+  <div id="labelContainer">
+    <h3>Flooding scenarios</h3>
+    <div id="flooding4" class="labels" appearance="outline">1000 year rain</div>
+    <div id="flooding3" class="labels" appearance="outline">Strong rain</div>
+    <div id="flooding2" class="labels" appearance="outline">Light rain</div>
+    <div id="flooding1" class="labels" appearance="solid">No rain</div>
+  </div>
+
+  <div id="buttonContainer" class="container">
+    <calcite-button id="impact" appearance="outline">Flood Impact</calcite-button>
+
+  </div>
+
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>

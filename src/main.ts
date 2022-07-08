@@ -1,20 +1,23 @@
+import CloudyWeather from "@arcgis/core/views/3d/environment/CloudyWeather";
+import RainyWeather from "@arcgis/core/views/3d/environment/RainyWeather";
 import SceneView from "@arcgis/core/views/SceneView";
 import WebScene from "@arcgis/core/WebScene";
 import Daylight from "@arcgis/core/widgets/Daylight";
 import Expand from "@arcgis/core/widgets/Expand";
 import Weather from "@arcgis/core/widgets/Weather";
-import CloudyWeather from "@arcgis/core/views/3d/environment/CloudyWeather";
-import RainyWeather from "@arcgis/core/views/3d/environment/RainyWeather";
 
+import Camera from "@arcgis/core/Camera";
+import Color from "@arcgis/core/Color";
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import GroupLayer from "@arcgis/core/layers/GroupLayer";
+import Layer from "@arcgis/core/layers/Layer";
+import { SimpleRenderer } from "@arcgis/core/renderers";
+import { FillSymbol3DLayer, PolygonSymbol3D } from "@arcgis/core/symbols";
+import Home from "@arcgis/core/widgets/Home";
+import Legend from "@arcgis/core/widgets/Legend";
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import "@esri/calcite-components/dist/components/calcite-loader";
-import { FalseLiteral } from "typescript";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import Layer from "@arcgis/core/layers/Layer";
-import Home from "@arcgis/core/widgets/Home";
-import Camera from "@arcgis/core/Camera";
-import GroupLayer from "@arcgis/core/layers/GroupLayer";
-import Legend from "@arcgis/core/widgets/Legend";
 
 // setAssetPath("https://js.arcgis.com/calcite-components/1.0.0-beta.77/assets");
 
@@ -48,20 +51,20 @@ const view = new SceneView({
   container: "viewDiv",
   camera: new Camera({
     position: {
-      longitude: 5.11844661,
-      latitude: 52.09356785,
-      z: 11.40484
+      x: 5.11417868,
+      y: 52.08521220,
+      z: 13.60010,
     },
-    heading: 86.89,
-    tilt: 88.50
+    heading: 320.60,
+    tilt: 89.34
   }),
   qualityProfile: "high",
 
   environment: {
-    weather: {
-      type: "cloudy", // autocasts as new CloudyWeather({ cloudCover: 0.3 })
-      cloudCover: 0.3,
-    },
+    // weather: {
+    //   type: "cloudy", // autocasts as new CloudyWeather({ cloudCover: 0.3 })
+    //   cloudCover: 0.3,
+    // },
     atmosphere: {
       quality: "high",
     },
@@ -75,6 +78,7 @@ const view = new SceneView({
 /***********************************
  * Add the widgets' UI elements to the view
  ***********************************/
+
 const weatherExpand = new Expand({
   view: view,
   content: new Weather({
@@ -92,15 +96,17 @@ const daylightExpand = new Expand({
 });
 view.ui.add([weatherExpand, daylightExpand], "top-right");
 view.ui.add(new Home({ view: view }), "top-left")
-const legend = new Expand({ view: view, expanded: false, content: new Legend({view:view})})
-view.ui.add(legend, "bottom-left")
+const legend = new Expand({ view: view, expanded: false, content: new Legend({ view: view }) })
+// view.ui.add(legend, "bottom-left")
 
 /***********************************
  * Add functionality to change between flooding and no flooding
  ***********************************/
 // Wait for the view to be loaded, in order to being able to retrieve the layer
-let floodLevel: Layer;
+let floodLevel: GroupLayer;
 let floodImpact: Layer;
+
+let floodRenderer: any;
 
 const flooding1 = document.getElementById(
   "flooding1"
@@ -121,7 +127,9 @@ view.when(() => {
   // Find the layer for the
   floodLevel = scene.allLayers.find(function (layer) {
     return layer.title === "Flood Level";
-  });
+  }) as GroupLayer;
+
+  floodRenderer = (floodLevel.layers.getItemAt(0) as FeatureLayer).renderer;
 
   floodImpact = scene.allLayers.find(function (layer) {
     return layer.title === "Building Flood Impact";
@@ -192,7 +200,7 @@ function changeFlooding(value: number) {
       });
       floodLevel.visible = true;
       ((floodLevel as GroupLayer).layers.getItemAt(0) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 2 };
-      ((floodLevel as GroupLayer).layers.getItemAt(1) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 4};
+      ((floodLevel as GroupLayer).layers.getItemAt(1) as FeatureLayer).elevationInfo = { mode: 'absolute-height', offset: 4 };
       break;
   }
 }
@@ -211,5 +219,82 @@ impact.addEventListener("click", () => {
     legend.expanded = false;
   }
 });
+
+
+/*
+Plenary steps
+*/
+
+const addFloodBtn = document.getElementById("addFlood") as HTMLCalciteButtonElement;
+const addWaterBtn = document.getElementById("addWater") as HTMLCalciteButtonElement;
+
+const overviewBtn = document.getElementById("showOverview") as HTMLCalciteButtonElement;
+
+addFloodBtn.onclick = async () => {
+  await view.goTo(new Camera({
+    position: {
+      x: 5.11406012,
+      y: 52.08537330,
+      z: 447.57952,
+    },
+    heading: 319.57,
+    tilt: 0.50
+  }));
+
+  floodLevel.visible = true;
+
+  const renderer = new SimpleRenderer({
+    symbol: new PolygonSymbol3D({
+      symbolLayers: [
+        new FillSymbol3DLayer({
+          material: {
+            color: new Color("orange")
+          }
+        })
+      ]
+    })
+  });
+
+  floodLevel.layers.forEach(l => (l as FeatureLayer).renderer = renderer);
+};
+
+addWaterBtn.onclick = async () => {
+  floodLevel.layers.forEach(l => (l as FeatureLayer).renderer = floodRenderer);
+
+  await view.goTo(new Camera({
+    position: {
+      x: 5.11417868,
+      y: 52.08521220,
+      z: 13.60010,
+    },
+    heading: 320.60,
+    tilt: 89.34
+  }));
+
+}
+
+overviewBtn.onclick = () => {
+  view.goTo(new Camera({
+    position: {
+      x: 5.10159473,
+      y: 52.08993904,
+      z: 217.99420,
+    },
+    heading: 93.76,
+    tilt: 67.94
+  }), { speedFactor: 0.75 });
+}
+
+reactiveUtils.watch(() => view.environment.weather, (weather) => {
+  if (weather && weather.type !== "rainy") {
+    floodLevel.visible = false;
+  }
+});
+
+
+view.ui.add(addFloodBtn, "bottom-left");
+view.ui.add(addWaterBtn, "bottom-left");
+
+view.ui.add(overviewBtn, "bottom-left");
 
 window["view"] = view;

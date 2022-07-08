@@ -11,7 +11,7 @@ body,
 
 
 .container {
-  display: flex;
+  display: none;
   flex-direction: column;
   background-color: white;
   justify-content: center;
@@ -24,6 +24,7 @@ body,
 }
 
 #sliderContainer {
+  display: none;
   padding: 15px;
   -webkit-transform: rotate(270deg);
   position: absolute;
@@ -40,7 +41,7 @@ body,
   position: absolute;
   bottom: 100px;
   right: 30px;
-  display: flex;
+  display: none;
   justify-content: space-between;
   flex-direction: column;
 }
@@ -48,11 +49,11 @@ body,
 .labels {
   width: 80%;
   text-align: right;
-  cursor: pointer;  
+  cursor: pointer;
 }
 
 .container {
-  display: flex;
+  display: none;
   flex-direction: column;
   background-color: white;
   justify-content: center;
@@ -82,7 +83,7 @@ input[type="range"]::-webkit-slider-thumb {
   height: 20px;
   border-radius: 50%;
   border: 2px solid grey;
-  cursor: pointer;  
+  cursor: pointer;
 }
 
 ​ input[type="range"]::-webkit-slider-thumb:hover {
@@ -91,7 +92,7 @@ input[type="range"]::-webkit-slider-thumb {
   width: 30px;
   height: 30px;
   outline: 3px solid white;
-        outline-offset: -6px;
+  outline-offset: -6px;
 }
 
 input[type="range"]::-webkit-slider-thumb:active {
@@ -100,7 +101,7 @@ input[type="range"]::-webkit-slider-thumb:active {
   width: 30px;
   height: 30px;
   outline: 3px solid white;
-        outline-offset: -6px;
+  outline-offset: -6px;
 }
 
 h3 {
