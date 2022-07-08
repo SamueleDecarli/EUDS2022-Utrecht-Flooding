@@ -92,7 +92,7 @@ const flood = new FeatureLayer({
   })
 });
 
-//view.map.add(flood)
+view.map.add(flood)
 
 
 //***********************************
@@ -110,14 +110,14 @@ let rendererWater = new SimpleRenderer({
   })
 })
 
-//flood.renderer = rendererWater
+flood.renderer = rendererWater
 
 
 //***********************************
 //* Step 3: Finalize app
 //***********************************
 
-//finalizeApp()
+finalizeApp()
 
 
 
@@ -214,7 +214,6 @@ view.when(() => {
       let features = results.features
       if (features.length > 0) {
         for (let i = 0; i < features.length; i++) {
-          console.log(features[i].geometry);
           let graphic = new Graphic({
             geometry: features[i].geometry,
             symbol: waterSymbol
@@ -242,67 +241,52 @@ view.when(() => {
 
   flooding1?.addEventListener("click", (event) => {
     // Change the weather to rainy to match the flooding scenario
-    changeFlooding(1);
-    sliderFlooding!.value = "1";
+    changeFlooding(0);
+    sliderFlooding!.value = "0";
   });
 
   flooding2?.addEventListener("click", (event) => {
     // Change the weather to rainy to match the flooding scenario
-    changeFlooding(2);
-    sliderFlooding!.value = "2";
+    changeFlooding(0.33);
+    sliderFlooding!.value = "0.33";
   });
 
   flooding3?.addEventListener("click", (event) => {
     // Change the weather to rainy to match the flooding scenario
-    changeFlooding(3);
-    sliderFlooding!.value = "3";
+    changeFlooding(0.66);
+    sliderFlooding!.value = "0.66";
   });
 
   flooding4?.addEventListener("click", (event) => {
     // Change the weather to rainy to match the flooding scenario
-    changeFlooding(4);
-    sliderFlooding!.value = "4";
+    changeFlooding(1);
+    sliderFlooding!.value = "1";
   });
 
 
   sliderFlooding?.addEventListener("input", (event) => {
-    changeFlooding(parseInt(sliderFlooding.value));
+    changeFlooding(parseFloat(sliderFlooding.value));
   });
 });
 
 
 function changeFlooding(value: number) {
-  switch (value) {
-    case 1:
-      view.environment.weather = new CloudyWeather({
-        cloudCover: 0.5,
-      });
-      floodLayer.visible = false;
-      break;
-    case 2:
-      view.environment.weather = new RainyWeather({
-        cloudCover: 0.4,
-        precipitation: 0.2,
-      });
-      floodLayer.visible = false;
-      break;
-    case 3:
-      view.environment.weather = new RainyWeather({
-        cloudCover: 0.4,
-        precipitation: 0.5,
-      });
-      floodLayer.visible = true;
-      floodLayer.elevationInfo = { mode: 'absolute-height', offset: 3.1 };
-      break;
-    case 4:
-      view.environment.weather = new RainyWeather({
-        cloudCover: 0.4,
-        precipitation: 1,
-      });
-      floodLayer.visible = true;
-      floodLayer.elevationInfo = { mode: 'absolute-height', offset: 3.6 };
-      break;
+  if (value == 0) {
+
+    view.environment.weather = new CloudyWeather({
+      cloudCover: 0.5,
+    });
+    floodLayer.visible = false;
   }
+  else {
+    view.environment.weather = new RainyWeather({
+      cloudCover: 0.4,
+      precipitation: value>0.2?value:0,
+    });
+    floodLayer.visible = true;
+    floodLayer.elevationInfo = { mode: 'absolute-height', offset: value + 2.6 };
+  }
+
 }
 
 let impact = document.getElementById("impact") as HTMLCalciteButtonElement;
