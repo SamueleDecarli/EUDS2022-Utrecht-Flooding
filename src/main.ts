@@ -108,9 +108,15 @@ let rendererWater = new SimpleRenderer({
 
 //flood.renderer = rendererWater
 
+//***********************************
+//* Step 3: Add weather
+//***********************************
+
+//view.environment.weather = new RainyWeather({ cloudCover: 0.4, precipitation: 0.5 });
+
 
 //***********************************
-//* Step 3: Finalize app
+//* Step 4: Finalize app
 //***********************************
 
 //finalizeApp()
