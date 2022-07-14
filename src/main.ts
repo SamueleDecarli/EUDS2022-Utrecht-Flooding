@@ -88,7 +88,7 @@ const flood = new FeatureLayer({
   })
 });
 
-//view.map.add(flood)
+// view.map.add(flood)
 
 
 //***********************************
@@ -106,20 +106,20 @@ let rendererWater = new SimpleRenderer({
   })
 })
 
-//flood.renderer = rendererWater
+// flood.renderer = rendererWater
 
 //***********************************
 //* Step 3: Add weather
 //***********************************
 
-//view.environment.weather = new RainyWeather({ cloudCover: 0.4, precipitation: 0.5 });
+// view.environment.weather = new RainyWeather({ cloudCover: 0.4, precipitation: 0.5 });
 
 
 //***********************************
 //* Step 4: Finalize app
 //***********************************
 
-//finalizeApp()
+// finalizeApp()
 
 
 
@@ -340,7 +340,9 @@ impact.addEventListener("click", () => {
 });
 
 function finalizeApp() {
-
+  view.environment.weather = new CloudyWeather({
+    cloudCover: 0.5,
+  });
   document.getElementById("sliderContainer")!.style.display = "flex"
   document.getElementById("labelContainer")!.style.display = "flex"
   document.getElementById("buttonContainer")!.style.display = "flex"
