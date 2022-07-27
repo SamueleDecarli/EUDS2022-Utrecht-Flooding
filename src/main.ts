@@ -88,7 +88,7 @@ const flood = new FeatureLayer({
   })
 });
 
-// view.map.add(flood)
+view.map.add(flood)
 
 
 //***********************************
@@ -106,20 +106,20 @@ let rendererWater = new SimpleRenderer({
   })
 })
 
-// flood.renderer = rendererWater
+flood.renderer = rendererWater
 
 //***********************************
 //* Step 3: Add weather
 //***********************************
 
-// view.environment.weather = new RainyWeather({ cloudCover: 0.4, precipitation: 0.5 });
+view.environment.weather = new RainyWeather({ cloudCover: 0.4, precipitation: 0.5 });
 
 
 //***********************************
 //* Step 4: Finalize app
 //***********************************
 
-// finalizeApp()
+finalizeApp()
 
 
 
@@ -202,7 +202,6 @@ view.when(() => {
       let features = results.features
       if (features.length > 0) {
         for (let i = 0; i < features.length; i++) {
-          console.log(features[i].geometry);
           let graphic = new Graphic({
             geometry: features[i].geometry,
             symbol: waterSymbol
@@ -251,8 +250,6 @@ const floodingSlider = new Slider({
 floodingSlider.when(() => {
   floodingSlider.maxLabelElement.style.display = "none";
   floodingSlider.minLabelElement.style.display = "none";
-  console.log(floodingSlider.labelElements.length)
-  floodingSlider.labelElements.getItemAt(0).style.display = "none";
 })
 
 function tickConfig(value: any, tickElement: any, labelElement: any) {
@@ -343,9 +340,7 @@ function finalizeApp() {
   view.environment.weather = new CloudyWeather({
     cloudCover: 0.5,
   });
-  document.getElementById("sliderContainer")!.style.display = "flex"
-  document.getElementById("labelContainer")!.style.display = "flex"
-  document.getElementById("buttonContainer")!.style.display = "flex"
+  document.getElementById("container")!.style.display = "flex"
 
 
   view.map.remove(flood);
