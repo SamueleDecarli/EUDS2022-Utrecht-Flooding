@@ -9,102 +9,29 @@ body,
   padding: 0;
 }
 
-
-.container {
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  justify-content: center;
-  padding: 10px;
-}
-
-.container calcite-button {
+#floodingSlider {
+  height: 200px;
   width: 200px;
-  margin: 5px;
+  margin: 20px 0;
 }
 
-#sliderContainer {
-  padding: 15px;
-  -webkit-transform: rotate(270deg);
-  position: absolute;
-  bottom: 210px;
-  right: -50px;
-  z-index: 99;
-}
-
-#labelContainer {
+#container {
   background-color: white;
-  padding: 25px;
-  width: 180px;
-  height: 280px;
-  position: absolute;
-  bottom: 100px;
-  right: 30px;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
-
-.labels {
-  width: 80%;
-  text-align: right;
-  cursor: pointer;  
-}
-
-.container {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  background-color: white;
-  justify-content: center;
-  padding: 10px;
 
-  position: absolute;
-  bottom: 40px;
-  right: 30px;
 }
 
-
-input[type="range"] {
-  display: block;
-  -webkit-appearance: none;
-  background-color: var(--calcite-ui-brand);
-  margin: 0 auto;
-  outline: 0;
-  width: 200px;
-  height: 6px;
-  border-radius: 3px;
+.esri-slider__label {
+  display: none;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  background-color: white;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid grey;
-  cursor: pointer;  
-}
-
-​ input[type="range"]::-webkit-slider-thumb:hover {
-  background-color: var(--calcite-ui-brand);
-  border: 2px solid var(--calcite-ui-brand);
-  width: 30px;
-  height: 30px;
-  outline: 3px solid white;
-        outline-offset: -6px;
-}
-
-input[type="range"]::-webkit-slider-thumb:active {
-  background-color: var(--calcite-ui-brand);
-  border: 2px solid var(--calcite-ui-brand);
-  width: 30px;
-  height: 30px;
-  outline: 3px solid white;
-        outline-offset: -6px;
-}
-
-h3 {
-  margin: 5px;
+.esri-slider__content {
+  margin-top: auto;
+  margin-right: auto;
+  margin-bottom: auto;
+  margin-left: 20px;
 }
 
 .esri-view-surface::after {

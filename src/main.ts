@@ -8,13 +8,14 @@ import RainyWeather from "@arcgis/core/views/3d/environment/RainyWeather";
 
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import "@esri/calcite-components/dist/components/calcite-loader";
-import { FalseLiteral } from "typescript";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import Layer from "@arcgis/core/layers/Layer";
 import Home from "@arcgis/core/widgets/Home";
 import Camera from "@arcgis/core/Camera";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import Legend from "@arcgis/core/widgets/Legend";
+import Slider from "@arcgis/core/widgets/Slider";
+import promiseUtils from "@arcgis/core/core/promiseUtils";
 
 
 /***********************************
@@ -77,31 +78,16 @@ const daylightExpand = new Expand({
 });
 view.ui.add([weatherExpand, daylightExpand], "top-right");
 view.ui.add(new Home({ view: view }), "top-left")
-const legend = new Expand({ view: view, expanded: false, content: new Legend({view:view})})
+const legend = new Expand({ view: view, expanded: false, content: new Legend({ view: view }) })
 view.ui.add(legend, "bottom-left")
 
 /***********************************
- * Add functionality to change between flooding and no flooding
+ * Add functionality to change between the different flooding scenarios
  ***********************************/
-// Wait for the view to be loaded, in order to being able to retrieve the layer
+
 let floodLevel: Layer;
 let floodImpact: Layer;
-
-const flooding1 = document.getElementById(
-  "flooding1"
-) as HTMLCalciteButtonElement;
-const flooding2 = document.getElementById(
-  "flooding2"
-) as HTMLCalciteButtonElement;
-const flooding3 = document.getElementById(
-  "flooding3"
-) as HTMLCalciteButtonElement;
-const flooding4 = document.getElementById(
-  "flooding4"
-) as HTMLCalciteButtonElement;
-
-const sliderFlooding = document.getElementById("slider") as HTMLInputElement;
-
+// Wait for the view to be loaded, in order to being able to retrieve the layer
 view.when(() => {
   // Find the layer for the
   floodLevel = scene.allLayers.find(function (layer) {
@@ -113,36 +99,68 @@ view.when(() => {
   });
   floodImpact.title = "Flood Impact (1000 year rain)";
 
-
-  flooding1?.addEventListener("click", (event) => {
-    // Change the weather to rainy to match the flooding scenario
-    changeFlooding(1);
-    sliderFlooding!.value = "1";
-  });
-
-  flooding2?.addEventListener("click", (event) => {
-    // Change the weather to rainy to match the flooding scenario
-    changeFlooding(2);
-    sliderFlooding!.value = "2";
-  });
-
-  flooding3?.addEventListener("click", (event) => {
-    // Change the weather to rainy to match the flooding scenario
-    changeFlooding(3);
-    sliderFlooding!.value = "3";
-  });
-
-  flooding4?.addEventListener("click", (event) => {
-    // Change the weather to rainy to match the flooding scenario
-    changeFlooding(4);
-    sliderFlooding!.value = "4";
-  });
-
-
-  sliderFlooding?.addEventListener("input", (event) => {
-    changeFlooding(parseInt(sliderFlooding.value));
-  });
 });
+
+const floodingSlider = new Slider({
+  container: "floodingSlider",
+  min: 1,
+  max: 4,
+  steps: [1, 2, 3, 4],
+  layout: "vertical",
+  values: [1],
+  visibleElements: {
+    labels: true,
+    rangeLabels: true
+  },
+  tickConfigs: [{
+    mode: "position",
+    values: [1, 2, 3, 4],
+    labelsVisible: true,
+    tickCreatedFunction: tickConfig
+  }]
+});
+
+floodingSlider.when(() => {
+  floodingSlider.maxLabelElement.style.display = "none";
+  floodingSlider.minLabelElement.style.display = "none";
+  console.log(floodingSlider.labelElements.length)
+  floodingSlider.labelElements.getItemAt(0).style.display = "none";
+})
+
+function tickConfig(value: any, tickElement: any, labelElement: any) {
+  labelElement.style.transform = "unset"
+  switch (value) {
+    case 1:
+      labelElement.innerHTML = "No rain";
+      break;
+    case 2:
+      labelElement.innerHTML = "Light rain";
+      break;
+    case 3:
+      labelElement.innerHTML = "Strong rain";
+      break;
+    case 4:
+      labelElement.innerHTML = "1000 year rain";
+      break;
+  }
+  const setValue = () => {
+    floodingSlider.values = [value];
+  };
+  tickElement.addEventListener("click", setValue);
+  tickElement.style.cursor = "pointer";
+  labelElement.addEventListener("click", setValue);
+  labelElement.style.cursor = "pointer";
+}
+
+floodingSlider.watch(
+  "values",
+  () => {
+    changeFlooding(floodingSlider.values[0])
+  }
+);
+
+view.ui.add("container", "bottom-right")
+
 
 function changeFlooding(value: number) {
   switch (value) {
