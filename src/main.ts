@@ -15,7 +15,6 @@ import Camera from "@arcgis/core/Camera";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
 import Legend from "@arcgis/core/widgets/Legend";
 import Slider from "@arcgis/core/widgets/Slider";
-import promiseUtils from "@arcgis/core/core/promiseUtils";
 
 
 /***********************************
@@ -123,8 +122,6 @@ const floodingSlider = new Slider({
 floodingSlider.when(() => {
   floodingSlider.maxLabelElement.style.display = "none";
   floodingSlider.minLabelElement.style.display = "none";
-  console.log(floodingSlider.labelElements.length)
-  floodingSlider.labelElements.getItemAt(0).style.display = "none";
 })
 
 function tickConfig(value: any, tickElement: any, labelElement: any) {
