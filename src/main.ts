@@ -1,28 +1,28 @@
+import CloudyWeather from "@arcgis/core/views/3d/environment/CloudyWeather";
+import RainyWeather from "@arcgis/core/views/3d/environment/RainyWeather";
 import SceneView from "@arcgis/core/views/SceneView";
 import WebScene from "@arcgis/core/WebScene";
 import Daylight from "@arcgis/core/widgets/Daylight";
 import Expand from "@arcgis/core/widgets/Expand";
 import Weather from "@arcgis/core/widgets/Weather";
-import CloudyWeather from "@arcgis/core/views/3d/environment/CloudyWeather";
-import RainyWeather from "@arcgis/core/views/3d/environment/RainyWeather";
 
-import "@esri/calcite-components/dist/calcite/calcite.css";
-import "@esri/calcite-components/dist/components/calcite-loader";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import Layer from "@arcgis/core/layers/Layer";
-import Home from "@arcgis/core/widgets/Home";
 import Camera from "@arcgis/core/Camera";
+import { SpatialReference } from "@arcgis/core/geometry";
+import Polygon from "@arcgis/core/geometry/Polygon";
+import Graphic from "@arcgis/core/Graphic";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
+import Layer from "@arcgis/core/layers/Layer";
+import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
+import FillSymbol3DLayer from "@arcgis/core/symbols/FillSymbol3DLayer";
+import PolygonSymbol3D from "@arcgis/core/symbols/PolygonSymbol3D";
+import WaterSymbol3DLayer from "@arcgis/core/symbols/WaterSymbol3DLayer";
+import Home from "@arcgis/core/widgets/Home";
 import Legend from "@arcgis/core/widgets/Legend";
 import Slider from "@arcgis/core/widgets/Slider";
-import { SpatialReference } from "@arcgis/core/geometry";
-import WaterSymbol3DLayer from "@arcgis/core/symbols/WaterSymbol3DLayer";
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
-import Graphic from "@arcgis/core/Graphic";
-import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
-import Polygon from "@arcgis/core/geometry/Polygon";
-import PolygonSymbol3D from "@arcgis/core/symbols/PolygonSymbol3D";
-import FillSymbol3DLayer from "@arcgis/core/symbols/FillSymbol3DLayer";
+import "@esri/calcite-components/dist/calcite/calcite.css";
+import "@esri/calcite-components/dist/components/calcite-loader";
 
 /***********************************
  * Create the SceneView
@@ -88,14 +88,14 @@ const flood = new FeatureLayer({
   })
 });
 
-view.map.add(flood)
+// view.map.add(flood);
 
 
 //***********************************
 //* Step 2: Style flooding data
 //***********************************
 
-let rendererWater = new SimpleRenderer({
+const rendererWater = new SimpleRenderer({
   symbol: new PolygonSymbol3D({
     symbolLayers: [
       new WaterSymbol3DLayer({
@@ -104,22 +104,22 @@ let rendererWater = new SimpleRenderer({
       })
     ]
   })
-})
+});
 
-flood.renderer = rendererWater
+// flood.renderer = rendererWater;
 
 //***********************************
 //* Step 3: Add weather
 //***********************************
 
-view.environment.weather = new RainyWeather({ cloudCover: 0.4, precipitation: 0.5 });
+// view.environment.weather = new RainyWeather({ cloudCover: 0.4, precipitation: 0.5 });
 
 
 //***********************************
 //* Step 4: Finalize app
 //***********************************
 
-finalizeApp()
+// finalizeApp();
 
 
 
